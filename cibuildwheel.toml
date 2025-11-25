@@ -1,0 +1,53 @@
+# cibuildwheel configuration for pyreadr
+
+[tool.cibuildwheel]
+# for all platforms: test
+test-sources = ["pyreadr/tests", "pyreadr/test_data"]
+test-requires = ["pandas", "xarray"]
+test-command = ["python pyreadr/tests/test_basic.py", 
+]
+
+[tool.cibuildwheel.linux]
+# Install devel packages to have the header files
+before-all = [
+  "yum install bzip2-devel bzip2 xz-devel -y",
+]
+
+[tool.cibuildwheel.macos]
+# install packages with brew to have header files
+before-all = [
+  "brew install xz",
+]
+
+[tool.cibuildwheel.macos.environment]
+# set environment variables to be able to use the brew libraries
+CFLAGS="-I$(brew --prefix xz)/include"
+LDFLAGS="-L$(brew --prefix xz)/lib" 
+CPPFLAGS="-I$(brew --prefix xz)/include"
+PKG_CONFIG_PATH="$(brew --prefix xz)/lib/pkgconfig"
+
+[tool.cibuildwheel.windows]
+# Install mingw
+#before-all = [
+  #"choco install mingw --force -y",
+  #'choco install mingw --force -y --no-progress --params "/InstallDir:C:\MinGW"',
+#]
+
+before-build = [
+    # write a setup.cfg to use mingw as compiler
+    'pip install delvewheel setuptools', 
+    'python scripts/configure_mingw.py',
+    # copy dlls as an alias for repairing wheels
+    'powershell -Command "Copy-Item -Path C:\msys_build\msys64\mingw64\bin\libiconv-*.dll -Destination C:\msys_build\msys64\mingw64\bin\iconv.dll -Force"',
+    'powershell -Command "Copy-Item -Path C:\msys_build\msys64\mingw64\bin\libbz2-*.dll -Destination C:\msys_build\msys64\mingw64\bin\libbz2.dll -Force"',
+    'powershell -Command "Copy-Item -Path C:\msys_build\msys64\mingw64\bin\zlib1.dll -Destination C:\msys_build\msys64\mingw64\bin\zlib.dll -Force"',
+]
+
+repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel} --add-path C:\\msys_build\\msys64\\mingw64\\bin"
+
+[tool.cibuildwheel.windows.environment]
+# add mingw to the path
+PATH="$PATH;C:\\msys_build\\msys64\\mingw64\\bin"
+CC="gcc"
+CXX="g++"
+
