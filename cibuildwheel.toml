@@ -5,6 +5,7 @@
 test-sources = ["pyreadr/tests", "pyreadr/test_data"]
 test-requires = ["pandas", "xarray"]
 test-command = ["python pyreadr/tests/test_basic.py", 
+	"python pyreadr/tests/test_http_integration.py",
 ]
 
 [tool.cibuildwheel.linux]
