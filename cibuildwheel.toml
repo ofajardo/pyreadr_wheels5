@@ -3,8 +3,10 @@
 [tool.cibuildwheel]
 # for all platforms: test
 test-sources = ["pyreadr/tests", "pyreadr/test_data"]
-test-requires = ["pandas", "xarray"]
-test-command = ["python pyreadr/tests/test_basic.py", 
+test-requires = ["pandas", "polars", "narwhals", "xarray"]
+test-command = ["python pyreadr/tests/test_basic.py",
+	"python pyreadr/tests/test_narwhalified.py --backend=pandas",
+	"python pyreadr/tests/test_narwhalified.py --backend=polars",
 	"python pyreadr/tests/test_http_integration.py",
 ]
 
