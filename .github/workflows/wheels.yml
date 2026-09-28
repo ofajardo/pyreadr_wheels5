@@ -2,7 +2,7 @@ name: Build Pyreadr wheels
 
 env:
   # A commit hash for the pyreadr repo, for which to build wheels.
-  SOURCE_REF_TO_BUILD: 09935cdec1969f15d74eb7eadfe4282facaa22a7
+  SOURCE_REF_TO_BUILD: c1123a2358076e76372210b1211eb1f9d6810dae 
 
 on: [push]
 
