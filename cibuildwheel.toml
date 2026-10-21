@@ -13,7 +13,7 @@ test-command = ["python pyreadr/tests/test_basic.py",
 [tool.cibuildwheel.linux]
 # Install devel packages to have the header files
 before-all = [
-  "yum install bzip2-devel bzip2 xz-devel -y",
+  "yum install --disablerepo=epel bzip2-devel bzip2 xz-devel -y",
 ]
 
 [tool.cibuildwheel.macos]
